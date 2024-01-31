@@ -6,6 +6,7 @@ pipeline {
         CLUSTER_NAME = 'b-ctl-dev-cluster'
         ZONE = 'us-central1-c'
         IMAGE_NAME = 'speedtest'
+        GCP_BRANCH = 'main'
         // Remove KUBE_CONFIG, as it is not used in the script
     }
 

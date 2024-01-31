@@ -1,0 +1,3 @@
+{
+  "tests/step_defs/test_optical_fiber_network.py::test_speed": true
+}

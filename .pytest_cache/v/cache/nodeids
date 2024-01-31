@@ -1,0 +1,5 @@
+[
+  "tests/step_defs/test_optical_fiber_network.py::test_basic_dhcp_test",
+  "tests/step_defs/test_optical_fiber_network.py::test_basic_pppoe_test",
+  "tests/step_defs/test_optical_fiber_network.py::test_speed"
+]

@@ -2,6 +2,7 @@ pipeline {
     agent any
     
     environment {
+        BUILD_VERSION = "${BUILD_NUMBER}"
         PROJECT_ID = 'lumen-b-ctl-047'
         CLUSTER_NAME = 'b-ctl-dev-cluster'
         ZONE = 'us-central1-c'

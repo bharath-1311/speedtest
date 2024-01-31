@@ -1,0 +1,4 @@
+[
+  "test_optical_fiber_network.py::test_basic_dhcp_test",
+  "test_optical_fiber_network.py::test_basic_pppoe_test"
+]

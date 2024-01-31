@@ -1,20 +1,14 @@
-# Use an official Python runtime as a parent image
-FROM python:3.8
+FROM python:3.9 
 
-# Set the working directory in the container
-WORKDIR /app
+WORKDIR /code_files 
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+COPY . ./ 
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Install required dependencies
+RUN pip install openpyxl 
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
+# Ensure required files are present
 
-# Define environment variable
-ENV NAME World
+RUN [ -f "template.xlsx" ] || echo "Missing template.xlsx"
 
-# Run script.py when the container launches
-CMD ["python", "./speedtest_tool_v2.py"]
+ENTRYPOINT ["python3","-u","speedtest_tool_v2.py"]

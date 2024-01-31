@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+    
+    environment {
+        PROJECT_ID = 'lumen-b-ctl-047'
+        CLUSTER_NAME = 'b-ctl-dev-cluster'
+        ZONE = 'us-central1-c'
+        IMAGE_NAME = 'speedtest'
+        // Remove KUBE_CONFIG, as it is not used in the script
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                script {
+                    docker.build(env.IMAGE_NAME)
+                }
+            }
+        }
+
+        stage('Push to Container Registry') {
+            steps {
+                script {
+                    def gcrImage = "gcr.io/${env.PROJECT_ID}/${env.IMAGE_NAME}"
+                    docker.image(env.IMAGE_NAME).tag("${gcrImage}:${BUILD_NUMBER}")
+                    docker.image(env.IMAGE_NAME).tag("${gcrImage}:latest")
+
+                    sh "gcloud auth configure-docker"
+                    docker.withRegistry('https://gcr.io', 'gcr-credentials-id') {
+                        docker.image(gcrImage).push()
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to GKE') {
+            steps {
+                script {
+                    sh "gcloud container clusters get-credentials ${env.CLUSTER_NAME} --zone ${env.ZONE} --project ${env.PROJECT_ID}"
+
+                    // Replace 'your-gcr-image-tag' with the correct tag
+                    sh "kubectl apply -f job.yaml -f job.yaml --record --namespace=your-namespace"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and deployment successful!'
+        }
+        failure {
+            echo 'Build or deployment failed!'
+        }
+    }
+}
